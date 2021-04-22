@@ -27,10 +27,12 @@ Notification must be sent when a new report is available.
 List the dependencies of the Analysis-functionality.
 
 1. Access to the Server containing the telemetrics in a csv file
-1. _enter dependency
-1. _enter dependency
+1. interface or library to read the data from the csv files
+1. threshold data of the battery to find the breach
+1. interface or library to generate the pdf report
+1. Access to the server to store the generated pdf report
+1. Notification interfaces (access and details if required for notification) which has to be triggered once new report is avaialble
 
-(add more if needed)
 
 ### Mark the System Boundary
 
@@ -40,10 +42,10 @@ What is included in the software unit-test? What is not? Fill this table.
 |---------------------------|---------------|---
 Battery Data-accuracy       | No            | We do not test the accuracy of data
 Computation of maximum      | Yes           | This is part of the software being developed
-Off-the-shelf PDF converter | _enter Yes/No | _enter reasoning
-Counting the breaches       | _enter Yes/No | _enter reasoning
-Detecting trends            | _enter Yes/No | _enter reasoning
-Notification utility        | _enter Yes/No | _enter reasoning
+Off-the-shelf PDF converter | No            | This part is not developed as part of the software
+Counting the breaches       | Yes           | This is part of the software being developed
+Detecting trends            | Yes           | This is part of the software being developed
+Notification utility        | No            | This part is not developed as part of the software
 
 ### List the Test Cases
 
@@ -51,12 +53,17 @@ Write tests in the form of `<expected output or action>` from `<input>` / when `
 
 Add to these tests:
 
+1. expected output: write file failed event: no write access for storing pdf report
 1. Write minimum and maximum to the PDF from a csv containing positive and negative readings
 1. Write "Invalid input" to the PDF when the csv doesn't contain expected data
-1. _enter a test
-1. _enter a test
+1. Write "No Records/Data Found" to the PDF when the csv is empty
+1. Write "Access denied to read csv" to the PDF when the access to csv is not available
+1. Write "Battery specs not found" to the PDF when battery specifications(for instance threshold limit) are is not available
+1. expected output : proper trend to be recorded with date&time event: when reading are increased for 30 minutes
+1. expected output : no trend to be recorded event: when increase in reading for less than 30 minutes
+1. expected output : notification to be triggered event: when pdf is generated
+1. expected output : pdf report to be generated event: when a week is completed
 
-(add more)
 
 ### Recognize Fakes and Reality
 
@@ -68,8 +75,8 @@ Enter one part that's real and another part that's faked/mocked.
 |--------------------------|--------------|-----------------------------|---
 Read input from server     | csv file     | internal data-structure     | Fake the server store
 Validate input             | csv data     | valid / invalid             | None - it's a pure function
-Notify report availability | _enter input | _enter output               | _enter fake or mock
-Report inaccessible server | _enter input | _enter output               | _enter fake or mock
-Find minimum and maximum   | _enter input | _enter output               | _enter fake or mock
-Detect trend               | _enter input | _enter output               | _enter fake or mock
-Write to PDF               | _enter input | _enter output               | _enter fake or mock
+Notify report availability | notifcation details/pdf file          | notification trigger                      | mock
+Report inaccessible server | invalid sever address | report with error message               | fake
+Find minimum and maximum   | csv data | expected minimum/maximum                 | mock
+Detect trend               | csv data | report with trend               | mock
+Write to PDF               | internal data | pdf with data               | mock
